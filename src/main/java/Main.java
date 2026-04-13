@@ -1,23 +1,28 @@
 public class Main {
     static void main(String[] args) {
         Banco banco = new Banco(2);
+
+        probarBanco(banco);
+    }
+
+    private static void probarBanco(Banco bancoPrueba) {
         Cuenta cuenta1 = new Cuenta("Pepito", "Avenida Roble 3885", TipoCuenta.CUENTA_CORRIENTE);
         Cuenta cuenta2 = new Cuenta("Martina", "Avenida Jabón 981", TipoCuenta.CAJA_AHORRO);
-        banco.agregarCuenta(cuenta1);
-        banco.agregarCuenta(cuenta2);
+        bancoPrueba.agregarCuenta(cuenta1);
+        bancoPrueba.agregarCuenta(cuenta2);
 
-        banco.mostrarCuenta(cuenta1);
-        banco.mostrarCuenta(cuenta2);
-        banco.agregarSaldo(cuenta1, 1000);
-        banco.mostrarCuenta(cuenta1);
-        banco.procesarTransferencia(cuenta1, cuenta2, 1000);
-        banco.mostrarCuentas();
-        banco.agregarSaldo(cuenta1, 2000);
-        banco.mostrarCuenta(cuenta1);
-        banco.procesarTransferencia(cuenta1, cuenta2, 2000);
-        banco.mostrarCuentas();
-        banco.procesarTransferencia(cuenta1, cuenta2, 1000);
-        banco.procesarTransferencia(cuenta1, cuenta2, -200);
-        banco.procesarTransferencia(cuenta1, cuenta2, 0);
+        bancoPrueba.mostrarCuenta(cuenta1);
+        bancoPrueba.mostrarCuenta(cuenta2);
+        bancoPrueba.agregarSaldo(cuenta1, 1000);
+        bancoPrueba.mostrarCuenta(cuenta1);
+        bancoPrueba.procesarTransferencia(cuenta1, cuenta2, 1000);
+        bancoPrueba.mostrarCuentas();
+        bancoPrueba.agregarSaldo(cuenta1, 2000);
+        bancoPrueba.mostrarCuenta(cuenta1);
+        bancoPrueba.procesarTransferencia(cuenta1, cuenta2, 2000);
+        bancoPrueba.mostrarCuentas();
+        bancoPrueba.procesarTransferencia(cuenta1, cuenta2, 1000);
+        bancoPrueba.procesarTransferencia(cuenta1, cuenta2, -200);
+        bancoPrueba.procesarTransferencia(cuenta1, cuenta2, 0);
     }
 }
