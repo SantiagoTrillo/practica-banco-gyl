@@ -1,5 +1,5 @@
 public class Cuenta {
-    private final String nombre, direccion;
+    private final String nombre, contraseña, direccion;
     private final TipoCuenta tipoCuenta;
     private int saldo;
 
@@ -35,4 +35,5 @@ public class Cuenta {
     public String getNombre() {
         return nombre;
     }
+
 }

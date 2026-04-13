@@ -1,6 +1,11 @@
+import java.util.Scanner;
+
 public class Main {
     static void main(String[] args) {
-        Banco banco = new Banco(2);
+        Scanner teclado = new Scanner(System.in);
+        System.out.println("Ingrese el nombre del banco:");
+        String nombre = teclado.nextLine();
+        Banco banco = Banco.getInstancia(nombre);
 
         probarBanco(banco);
     }
@@ -26,3 +31,5 @@ public class Main {
         bancoPrueba.procesarTransferencia(cuenta1, cuenta2, 0);
     }
 }
+
+//terminales remotas para retirar y depositar dinero, un solo banco, sucursales como atributos de cuentas, retiros y consignaciones, agregar menú de interacción + scanner, excepciones, reemplazar arreglo por arraylist

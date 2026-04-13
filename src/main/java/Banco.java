@@ -1,19 +1,25 @@
-public class Banco {
-    private final Cuenta[] cuentas;
+import java.util.ArrayList;
 
-    public Banco(int cantidadCuentas) {
-        cuentas = new Cuenta[cantidadCuentas];
+public final class Banco {
+    private static Banco instancia;
+    private String nombre;
+    private ArrayList<Cuenta> cuentas;
+
+    private Banco(String nombre) {
+        this.nombre = nombre;
     }
 
-    public void agregarCuenta(Cuenta cuenta) {
-        boolean cuentaAgregada = false;
-        for (int i = 0; i < cuentas.length && !cuentaAgregada; i++) {
-            if (cuentas[i] == null) {
-                cuentas[i] = cuenta;
-                cuentaAgregada = true;
-            }
-        }
-    }
+    public void crearCuenta
+
+//    public void agregarCuenta(Cuenta cuenta) {
+//        boolean cuentaAgregada = false;
+//        for (int i = 0; i < cuentas.length && !cuentaAgregada; i++) {
+//            if (cuentas[i] == null) {
+//                cuentas[i] = cuenta;
+//                cuentaAgregada = true;
+//            }
+//        }
+//    }
 
     public void agregarSaldo(Cuenta cuenta, int saldo) {
         if (cuenta != null && saldo > 0) {
@@ -48,5 +54,12 @@ public class Banco {
                 System.out.println(cuenta);
             }
         }
+    }
+
+    public static Banco getInstancia(String nombre) {
+        if (instancia == null) {
+            instancia = new Banco(nombre);
+        }
+        return instancia;
     }
 }
