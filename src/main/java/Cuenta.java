@@ -17,10 +17,11 @@ public class Cuenta {
     public boolean transferirDinero(Cuenta cuenta, int dinero) {
         if (dinero <= 0 || this.saldo < dinero) {
             return false;
+        } else {
+            this.saldo -= dinero;
+            cuenta.depositar(dinero);
+            return true;
         }
-        this.saldo -= dinero;
-        cuenta.depositar(dinero);
-        return true;
     }
 
     @Override

@@ -16,27 +16,37 @@ public class Banco {
     }
 
     public void agregarSaldo(Cuenta cuenta, int saldo) {
-        cuenta.depositar(saldo);
+        if (cuenta != null && saldo > 0) {
+            cuenta.depositar(saldo);
+        }
     }
 
-    public void procesarTransferencia(Cuenta cuentaTransferente, Cuenta cuentaTransferido, int saldo) {
-        boolean resultadoTransferencia = cuentaTransferente.transferirDinero(cuentaTransferido, saldo);
-        if (!resultadoTransferencia) {
-            System.out.println("Error: saldo insuficiente o transferencia nula");
+    public void procesarTransferencia(Cuenta transferente, Cuenta transferido, int saldo) {
+        if (transferente != null && transferido != null) {
+            boolean resultadoTransferencia = transferente.transferirDinero(transferido, saldo);
+            if (!resultadoTransferencia) {
+                System.out.println("Error: saldo insuficiente, monto negativo");
+            } else {
+                System.out.println("Transferencia realizada con éxito");
+            }
         } else {
-            System.out.println("Transferencia realizada con éxito");
+            System.out.println("Error: la cuenta del transferente o del transferido es nula");
         }
     }
 
     public void mostrarCuenta(Cuenta cuenta) {
-        System.out.println("-----Detalles de la cuenta de " + cuenta.getNombre() + "-----");
-        System.out.println(cuenta);
+        if (cuenta != null) {
+            System.out.println("-----Detalles de la cuenta de " + cuenta.getNombre() + "-----");
+            System.out.println(cuenta);
+        }
     }
 
     public void mostrarCuentas() {
         System.out.println("-----Detalles de las cuentas del banco-----");
         for (Cuenta cuenta : cuentas) {
-            System.out.println(cuenta);
+            if (cuenta != null) {
+                System.out.println(cuenta);
+            }
         }
     }
 }
