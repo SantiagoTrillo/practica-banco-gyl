@@ -19,7 +19,7 @@ public final class Banco {
         int i = 1;
 
         for (Sucursal sucursal : sucursales) {
-            sucursal.registrarCuentaSucursal("Cliente " + i, "Cliente " + i + "@gmail.com", 999 + i, false, TipoCuenta.CUENTA_CORRIENTE);
+            sucursal.crearCuenta("Cliente " + i, "cliente" + i + "@gmail.com", 999 + i, false, TipoCuenta.CUENTA_CORRIENTE);
             i++;
             if (i == 10) {
                 break;
@@ -28,12 +28,12 @@ public final class Banco {
     }
 
     public void mostrarSucursales() {
-        for (Sucursal sucursal : sucursales) {
-            System.out.println(sucursal.getNombre());
+        for (int i = 0; i < sucursales.size(); i++) {
+            System.out.println(i + 1 + ") " + sucursales.get(i).getNombre());
         }
     }
 
-    public Sucursal buscarSucursal(String nombre) {
+    public Sucursal buscarSucursalBanco(String nombre) {
         Sucursal sucursalBuscada = null;
 
         for (Sucursal sucursal : sucursales) {
