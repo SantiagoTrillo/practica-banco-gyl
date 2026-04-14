@@ -1,59 +1,48 @@
 import java.util.ArrayList;
 
 public final class Banco {
-    private static Banco instancia;
     private String nombre;
-    private ArrayList<Cuenta> cuentas;
+    private static Banco instancia;
+    private final ArrayList<Sucursal> sucursales;
 
-    private Banco(String nombre) {
-        this.nombre = nombre;
+    private Banco(String nombre) throws IllegalArgumentException {
+        setNombre(nombre);
+        sucursales = new ArrayList<>();
     }
 
-    public void crearCuenta
-
-//    public void agregarCuenta(Cuenta cuenta) {
-//        boolean cuentaAgregada = false;
-//        for (int i = 0; i < cuentas.length && !cuentaAgregada; i++) {
-//            if (cuentas[i] == null) {
-//                cuentas[i] = cuenta;
-//                cuentaAgregada = true;
-//            }
-//        }
-//    }
-
-    public void agregarSaldo(Cuenta cuenta, int saldo) {
-        if (cuenta != null && saldo > 0) {
-            cuenta.depositar(saldo);
+    public void crearSucursal(String nombre) {
+        if (nombre.isBlank()) {
+            throw new IllegalArgumentException("(Banco, crearSucursal) el nombre de la sucursal está vacío");
         }
+        Sucursal sucursalNueva = new Sucursal(nombre);
+        sucursales.add(sucursalNueva);
     }
 
-    public void procesarTransferencia(Cuenta transferente, Cuenta transferido, int saldo) {
-        if (transferente != null && transferido != null) {
-            boolean resultadoTransferencia = transferente.transferirDinero(transferido, saldo);
-            if (!resultadoTransferencia) {
-                System.out.println("Error: saldo insuficiente, monto negativo");
-            } else {
-                System.out.println("Transferencia realizada con éxito");
+    public void mostrarCuenta(String emailBuscado) {
+        for (Sucursal sucursal : sucursales) {
+            if (sucursal == null) {
+                throw new IllegalArgumentException("(Banco, mostrarCuenta) una sucursal iterada es nula");
             }
-        } else {
-            System.out.println("Error: la cuenta del transferente o del transferido es nula");
-        }
-    }
-
-    public void mostrarCuenta(Cuenta cuenta) {
-        if (cuenta != null) {
-            System.out.println("-----Detalles de la cuenta de " + cuenta.getNombre() + "-----");
-            System.out.println(cuenta);
+            Cuenta cuentaBuscada = sucursal.buscarCuenta(emailBuscado);
+            if (cuentaBuscada != null) {
+                System.out.println(cuentaBuscada);
+            }
         }
     }
 
     public void mostrarCuentas() {
         System.out.println("-----Detalles de las cuentas del banco-----");
-        for (Cuenta cuenta : cuentas) {
-            if (cuenta != null) {
-                System.out.println(cuenta);
+        for (Sucursal sucursal : sucursales) {
+            if (sucursal == null) {
+                throw new IllegalArgumentException("(Banco, mostrarCuentas) una sucursal iterada es nula");
             }
+            System.out.println("-----Detalles de las cuentas de la sucursal " + sucursal.getNombre() + "-----");
+            sucursal.mostrarCuentas();
         }
+    }
+
+    public String getNombre() {
+        return nombre;
     }
 
     public static Banco getInstancia(String nombre) {
@@ -61,5 +50,12 @@ public final class Banco {
             instancia = new Banco(nombre);
         }
         return instancia;
+    }
+
+    private void setNombre(String nombre) {
+        if (nombre.isBlank()) {
+            throw new IllegalArgumentException("(Banco, setNombre) el nombre del banco está vacío");
+        }
+        this.nombre = nombre;
     }
 }

@@ -1,39 +1,39 @@
 public class Cuenta {
-    private final String nombre, contraseña, direccion;
+    private final String nombre, email;
+    private double saldo;
+    private final Sucursal sucursal;
     private final TipoCuenta tipoCuenta;
-    private int saldo;
 
-    public Cuenta(String nombre, String direccion, TipoCuenta tipoCuenta) {
+    public Cuenta(String nombre, String email, TipoCuenta tipoCuenta, Sucursal sucursal) {
         this.nombre = nombre;
-        this.direccion = direccion;
-        this.tipoCuenta = tipoCuenta;
+        this.email = email;
         saldo = 0;
-    }
-
-    public void depositar(int saldo) {
-        this.saldo += saldo;
-    }
-
-    public boolean transferirDinero(Cuenta cuenta, int dinero) {
-        if (dinero <= 0 || this.saldo < dinero) {
-            return false;
-        } else {
-            this.saldo -= dinero;
-            cuenta.depositar(dinero);
-            return true;
-        }
+        this.sucursal = sucursal;
+        this.tipoCuenta = tipoCuenta;
     }
 
     @Override
     public String toString() {
         return "Nombre: " + nombre + '\n' +
-                "Dirección: " + direccion + '\n' +
-                "Tipo de cuenta: " + tipoCuenta + '\n' +
-                "Saldo: " + saldo;
+                "Email: " + email + '\n' +
+                "Saldo: " + saldo +
+                "Sucursal: " + sucursal + '\n' +
+                "Tipo de cuenta: " + tipoCuenta + '\n';
     }
 
     public String getNombre() {
         return nombre;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public double getSaldo() {
+        return saldo;
+    }
+
+    public void setSaldo(double saldo) {
+        this.saldo = saldo;
+    }
 }
