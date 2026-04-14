@@ -1,13 +1,16 @@
 public class Cuenta {
-    private String nombre, email, contraseña;
+    private String nombre, email;
+    private int pin;
     private double saldo;
+    private final boolean permisosAdmin;
     private Sucursal sucursal;
     private TipoCuenta tipoCuenta;
 
-    public Cuenta(String nombre, String email, String contraseña, Sucursal sucursal, TipoCuenta tipoCuenta) {
+    public Cuenta(String nombre, String email, int pin, boolean permisosAdmin, Sucursal sucursal, TipoCuenta tipoCuenta) {
         setNombre(nombre);
         setEmail(email);
-        setContraseña(contraseña);
+        setPin(pin);
+        this.permisosAdmin = permisosAdmin;
         setSucursal(sucursal);
         setTipoCuenta(tipoCuenta);
         saldo = 0;
@@ -48,11 +51,11 @@ public class Cuenta {
         this.email = email;
     }
 
-    public void setContraseña(String contraseña) {
-        if (contraseña == null || contraseña.isBlank() || contraseña.length() < 8) {
-            throw new IllegalArgumentException("(Cuenta, setContraseña) la contraseña de la cuenta está vacía o es demasiado corta");
+    public void setPin(int pin) {
+        if (pin > 9999 || pin < 1000) {
+            throw new IllegalArgumentException("(Cuenta, setPin) el pin es inválido");
         }
-        this.contraseña = contraseña;
+        this.pin = pin;
     }
 
     public void setSucursal(Sucursal sucursal) {
