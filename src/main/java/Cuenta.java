@@ -33,6 +33,10 @@ public class Cuenta {
         return email;
     }
 
+    public int getPin() {
+        return pin;
+    }
+
     public double getSaldo() {
         return saldo;
     }
