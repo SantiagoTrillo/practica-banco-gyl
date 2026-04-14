@@ -11,13 +11,21 @@ public class Menu {
 
     public void mostrarMenu() {
         boolean correr = true;
-        System.out.println("-----Bienvenido a nuestro banco-----");
-        System.out.println("¿A qué sucursal le gustaría acceder? Escriba el nombre que corresponda");
-        banco.mostrarSucursales();
-        String sucursalElegida = teclado.nextLine();
-
         while (correr) {
-            System.out.println("""
+            boolean sucursalIniciada = true;
+            boolean sesionIniciada = false;
+            System.out.println("-----Bienvenido a nuestro banco-----");
+            System.out.println("¿A qué sucursal le gustaría acceder? Escriba el nombre que corresponda (Puede escribir S para salir del programa)");
+            banco.mostrarSucursales();
+            String nombreSucursal = teclado.nextLine();
+            if (nombreSucursal.equalsIgnoreCase("S")) {
+                correr = false;
+                System.out.println("\nGracias por visitar nuestro banco\n");
+            } else {
+                Sucursal sucursalElegida = buscarSucursal(nombreSucursal);
+
+                while (sucursalIniciada) {
+                    System.out.println("""
                     Ingrese el número que corresponda con la acción que desee realizar:
                     1) Registrar cuenta
                     2) Iniciar sesión
@@ -25,24 +33,45 @@ public class Menu {
                     4) Retirar dinero
                     5) Realizar una transferencia
                     6) Eliminar cuenta
-                    7) Salir""");
+                    7) Cerrar sesión
+                    8) Salir de la sucursal
+                    """);
 
-            int opcion = teclado.nextInt();
-            teclado.nextLine();
+                    int opcion = teclado.nextInt();
+                    teclado.nextLine();
 
-            switch (opcion) {
-                case 1:
-                    registrarCuenta(sucursalElegida);
-                    break;
-                case 2:
-                    iniciarSesion();
+                    switch (opcion) {
+                        case 1:
+                            sesionIniciada = registrarCuenta(sucursalElegida);
+                            break;
+                        case 2:
+                            if (!sesionIniciada) {
+                                sesionIniciada = iniciarSesion(sucursalElegida);
+                            } else {
+                                System.out.println("\nYa hay una sesión activa\n");
+                            }
+                            break;
+                        case 3:
+                        case 7:
+                            if (sesionIniciada) {
+                                sesionIniciada = false;
+                                System.out.println("Sesión cerrada con éxito");
+                            } else {
+                                System.out.println("\nNo hay una sesión activa\n");
+                            }
+                            break;
+                        case 8:
+                            sucursalIniciada = false;
+                    }
+                }
             }
         }
     }
 
-    private void registrarCuenta(String nombreSucursal) {
-        Sucursal sucursal = banco.buscarSucursal(nombreSucursal);
+    private boolean registrarCuenta(Sucursal sucursalElegida) {
         TipoCuenta tipoCuenta = null;
+        boolean sesionIniciada = false;
+
         System.out.println("Ingrese su nombre");
         String nombre = teclado.nextLine();
         System.out.println("Ingrese su email");
@@ -61,11 +90,37 @@ public class Menu {
         } else {
             System.out.println("Opción inválida");
         }
-        sucursal.registrarCuentaSucursal(nombre, email, pin, false, tipoCuenta);
+
+        Cuenta cuentaRegistrada = sucursalElegida.crearCuenta(nombre, email, pin, false, tipoCuenta);
+        System.out.println("\nCuenta creada con éxito. Bienvenido, " + cuentaRegistrada.getNombre() + "\n");
+        sesionIniciada = true;
+        return sesionIniciada;
     }
 
-    private void iniciarSesion() {
+    private boolean iniciarSesion(Sucursal sucursalElegida) {
+        boolean sesionIniciada = false;
 
+        System.out.println("Ingrese su email");
+        String email = teclado.nextLine();
+        System.out.println("Ingrese su pin");
+        int pin = teclado.nextInt();
+        Cuenta cuenta = sucursalElegida.buscarCuenta(email);
+        if (cuenta != null) {
+            if (cuenta.getPin() == pin) {
+                sesionIniciada = true;
+                System.out.println("Sesión iniciada con éxito");
+            } else {
+                System.out.println("Contraseña incorrecta");
+            }
+        } else {
+            System.out.println("No se ha encontrado una cuenta asociada con el email proporcionado");
+        }
+
+        return sesionIniciada;
+    }
+
+    private Sucursal buscarSucursal(String nombre) {
+        return banco.buscarSucursalBanco(nombre);
     }
 
 //    System.out.println("Ingrese el email de la cuenta a la que desea hacer un depósito:");
