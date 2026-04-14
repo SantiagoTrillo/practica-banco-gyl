@@ -9,11 +9,8 @@ public class Sucursal {
         cuentas = new ArrayList<>();
     }
 
-    public void registrarCuenta(String nombre, String email, String contraseña, TipoCuenta tipoCuenta) {
-        if (nombre == null || nombre.isBlank() || email == null || email.isBlank()) {
-            throw new IllegalArgumentException("(Sucursal, registrarCuenta) el nombre, email o contraseña de la cuenta nueva está vacío");
-        }
-        cuentas.add(new Cuenta(nombre, email, contraseña, this, tipoCuenta));
+    public void registrarCuentaSucursal(String nombre, String email, int pin, boolean permisosAdmin, TipoCuenta tipoCuenta) {
+        cuentas.add(new Cuenta(nombre, email, pin, permisosAdmin, this, tipoCuenta));
     }
 
     public void depositar(Cuenta cuenta, double monto) {
@@ -53,16 +50,12 @@ public class Sucursal {
         transferido.setSaldo(transferido.getSaldo() + monto);
     }
 
-//    private void restarSaldo(Cuenta cuenta, double monto) {
-//        cuenta.setSaldo(cuenta.getSaldo() - monto);
-//    }
-
-    public void mostrarCuenta(String emailBuscado) {
-        if (emailBuscado == null || emailBuscado.isBlank()) {
+    public void mostrarCuenta(String email) {
+        if (email == null || email.isBlank()) {
             throw new IllegalArgumentException("(Sucursal, mostrarCuenta) el email está vacío");
         }
         for (Cuenta cuenta : cuentas) {
-            Cuenta cuentaBuscada = this.buscarCuenta(emailBuscado);
+            Cuenta cuentaBuscada = this.buscarCuenta(email);
             if (cuentaBuscada != null) {
                 System.out.println(cuentaBuscada);
             }
@@ -82,11 +75,11 @@ public class Sucursal {
         cuentas.remove(cuenta);
     }
 
-    public Cuenta buscarCuenta(String emailBuscado) {
-        Cuenta cuentaBuscada= null;
+    public Cuenta buscarCuenta(String email) {
+        Cuenta cuentaBuscada = null;
 
         for (Cuenta cuenta : cuentas) {
-            if (cuenta.getEmail().equals(emailBuscado)) {
+            if (cuenta.getEmail().equalsIgnoreCase(email)) {
                 cuentaBuscada = cuenta;
             }
         }
