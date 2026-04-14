@@ -5,9 +5,43 @@ public final class Banco {
     private final ArrayList<Sucursal> sucursales;
 
     private Banco() {
-        sucursales = new ArrayList<>(
+        sucursales = new ArrayList<>();
+        inicializarSucursales();
+        inicializarCuentas();
+    }
 
-        );
+    private void inicializarSucursales(){
+        sucursales.add(new Sucursal("Parque Patricios"));
+        sucursales.add(new Sucursal("Boedo"));
+    }
+
+    private void inicializarCuentas() {
+        int i = 1;
+
+        for (Sucursal sucursal : sucursales) {
+            sucursal.registrarCuentaSucursal("Cliente " + i, "Cliente " + i + "@gmail.com", 999 + i, false, TipoCuenta.CUENTA_CORRIENTE);
+            i++;
+            if (i == 10) {
+                break;
+            }
+        }
+    }
+
+    public void mostrarSucursales() {
+        for (Sucursal sucursal : sucursales) {
+            System.out.println(sucursal.getNombre());
+        }
+    }
+
+    public Sucursal buscarSucursal(String nombre) {
+        Sucursal sucursalBuscada = null;
+
+        for (Sucursal sucursal : sucursales) {
+            if (sucursal.getNombre().equalsIgnoreCase(nombre)) {
+                sucursalBuscada = sucursal;
+            }
+        }
+        return sucursalBuscada;
     }
 
     public void crearSucursal(String nombre) {
