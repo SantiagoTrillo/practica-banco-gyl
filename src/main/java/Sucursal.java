@@ -9,8 +9,10 @@ public class Sucursal {
         cuentas = new ArrayList<>();
     }
 
-    public void registrarCuentaSucursal(String nombre, String email, int pin, boolean permisosAdmin, TipoCuenta tipoCuenta) {
-        cuentas.add(new Cuenta(nombre, email, pin, permisosAdmin, this, tipoCuenta));
+    public Cuenta crearCuenta(String nombre, String email, int pin, boolean permisosAdmin, TipoCuenta tipoCuenta) {
+        Cuenta cuentaNueva = new Cuenta(nombre, email, pin, permisosAdmin, this, tipoCuenta);
+        cuentas.add(cuentaNueva);
+        return cuentaNueva;
     }
 
     public void depositar(Cuenta cuenta, double monto) {
@@ -81,6 +83,7 @@ public class Sucursal {
         for (Cuenta cuenta : cuentas) {
             if (cuenta.getEmail().equalsIgnoreCase(email)) {
                 cuentaBuscada = cuenta;
+                break;
             }
         }
         return cuentaBuscada;
