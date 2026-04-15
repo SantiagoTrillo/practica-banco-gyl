@@ -2,7 +2,7 @@ public class Cuenta {
     private String nombre, email;
     private int pin;
     private double saldo;
-    private final boolean permisosAdmin;
+    private final boolean admin;
     private Sucursal sucursal;
     private TipoCuenta tipoCuenta;
 
@@ -10,7 +10,7 @@ public class Cuenta {
         setNombre(nombre);
         setEmail(email);
         setPin(pin);
-        this.permisosAdmin = permisosAdmin;
+        this.admin = permisosAdmin;
         setSucursal(sucursal);
         setTipoCuenta(tipoCuenta);
         saldo = 0;
@@ -20,7 +20,9 @@ public class Cuenta {
     public String toString() {
         return "Nombre: " + nombre + '\n' +
                 "Email: " + email + '\n' +
-                "Saldo: " + saldo +
+                "Pin: " + pin + '\n' +
+                "Saldo: $" + saldo + '\n' +
+                "Admin: " + admin + '\n' +
                 "Sucursal: " + sucursal.getNombre() + '\n' +
                 "Tipo de cuenta: " + tipoCuenta + '\n';
     }
@@ -39,6 +41,10 @@ public class Cuenta {
 
     public double getSaldo() {
         return saldo;
+    }
+
+    public boolean isAdmin() {
+        return admin;
     }
 
     public void setNombre(String nombre) {
@@ -77,8 +83,8 @@ public class Cuenta {
     }
 
     public void setSaldo(double saldo) {
-        if (saldo < 1) {
-            throw new IllegalArgumentException("(Cuenta, setSaldo) el saldo de la cuenta no es un número positivo");
+        if (saldo < 0) {
+            throw new IllegalArgumentException("(Cuenta, setSaldo) el saldo de la cuenta es un número negativo");
         }
         this.saldo = saldo;
     }

@@ -10,8 +10,13 @@ public class Sucursal {
     }
 
     public Cuenta crearCuenta(String nombre, String email, int pin, boolean permisosAdmin, TipoCuenta tipoCuenta) {
-        Cuenta cuentaNueva = new Cuenta(nombre, email, pin, permisosAdmin, this, tipoCuenta);
-        cuentas.add(cuentaNueva);
+        Cuenta cuentaNueva = buscarCuenta(email);
+
+        if (cuentaNueva == null) {
+            cuentaNueva = new Cuenta(nombre, email, pin, permisosAdmin, this, tipoCuenta);
+            cuentas.add(cuentaNueva);
+        }
+
         return cuentaNueva;
     }
 
@@ -50,18 +55,6 @@ public class Sucursal {
         }
         transferente.setSaldo(transferente.getSaldo() - monto);
         transferido.setSaldo(transferido.getSaldo() + monto);
-    }
-
-    public void mostrarCuenta(String email) {
-        if (email == null || email.isBlank()) {
-            throw new IllegalArgumentException("(Sucursal, mostrarCuenta) el email está vacío");
-        }
-        for (Cuenta cuenta : cuentas) {
-            Cuenta cuentaBuscada = this.buscarCuenta(email);
-            if (cuentaBuscada != null) {
-                System.out.println(cuentaBuscada);
-            }
-        }
     }
 
     public void mostrarCuentas() {

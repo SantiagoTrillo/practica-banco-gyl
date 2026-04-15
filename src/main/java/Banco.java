@@ -16,14 +16,11 @@ public final class Banco {
     }
 
     private void inicializarCuentas() {
-        int i = 1;
-
         for (Sucursal sucursal : sucursales) {
-            sucursal.crearCuenta("Cliente " + i, "cliente" + i + "@gmail.com", 999 + i, false, TipoCuenta.CUENTA_CORRIENTE);
-            i++;
-            if (i == 10) {
-                break;
+            for (int i = 1; i <= 10; i++) {
+                sucursal.crearCuenta("Cliente " + i, "cliente" + i + "@gmail.com", 999 + i, false, TipoCuenta.CUENTA_CORRIENTE);
             }
+            sucursal.crearCuenta("Admin", "admin@gmail.com", 2007, true, TipoCuenta.CAJA_AHORRO);
         }
     }
 
@@ -33,7 +30,22 @@ public final class Banco {
         }
     }
 
-    public Sucursal buscarSucursalBanco(String nombre) {
+    public void mostrarCuentas() {
+        System.out.println("-----Detalles de las cuentas del banco-----");
+        for (Sucursal sucursal : sucursales) {
+            System.out.println("-----Detalles de las cuentas de la sucursal " + sucursal.getNombre() + "-----");
+            sucursal.mostrarCuentas();
+        }
+    }
+
+    public void crearSucursal(String nombre) {
+        if (nombre.isBlank()) {
+            throw new IllegalArgumentException("(Banco, crearSucursal) el nombre de la sucursal está vacío");
+        }
+        sucursales.add(new Sucursal(nombre));
+    }
+
+    public Sucursal buscarSucursal(String nombre) {
         Sucursal sucursalBuscada = null;
 
         for (Sucursal sucursal : sucursales) {
@@ -44,19 +56,16 @@ public final class Banco {
         return sucursalBuscada;
     }
 
-    public void crearSucursal(String nombre) {
-        if (nombre.isBlank()) {
-            throw new IllegalArgumentException("(Banco, crearSucursal) el nombre de la sucursal está vacío");
-        }
-        sucursales.add(new Sucursal(nombre));
-    }
+    public Cuenta buscarCuenta(String email) {
+        Cuenta cuentaBuscada = null;
 
-    public void mostrarCuentas() {
-        System.out.println("-----Detalles de las cuentas del banco-----");
         for (Sucursal sucursal : sucursales) {
-            System.out.println("-----Detalles de las cuentas de la sucursal " + sucursal.getNombre() + "-----");
-            sucursal.mostrarCuentas();
+            cuentaBuscada = sucursal.buscarCuenta(email);
+            if (cuentaBuscada != null) {
+                break;
+            }
         }
+        return cuentaBuscada;
     }
 
     public static Banco getInstancia(){
