@@ -28,6 +28,8 @@ public class Sucursal {
             throw new IllegalArgumentException("(Sucursal, depositar) el monto a depositar no es un número positivo");
         }
         cuenta.setSaldo(cuenta.getSaldo() + monto);
+        Transaccion transaccionNueva = crearTransaccionHistorial(null, cuenta, monto, TipoTransaccion.DEPOSITO);
+        cuenta.agregarTransaccionHistorial(transaccionNueva);
     }
 
     public void retirar(Cuenta cuenta, double monto) {
@@ -41,6 +43,8 @@ public class Sucursal {
             throw new IllegalArgumentException("(Sucursal, retirar) saldo insuficiente");
         }
         cuenta.setSaldo(cuenta.getSaldo() - monto);
+        Transaccion transaccionNueva = crearTransaccionHistorial(cuenta, null, monto, TipoTransaccion.RETIRO);
+        cuenta.agregarTransaccionHistorial(transaccionNueva);
     }
 
     public void transferir(Cuenta transferente, Cuenta transferido, double monto) {
@@ -55,6 +59,14 @@ public class Sucursal {
         }
         transferente.setSaldo(transferente.getSaldo() - monto);
         transferido.setSaldo(transferido.getSaldo() + monto);
+        Transaccion transaccionEnviada = crearTransaccionHistorial(transferente, transferido, monto, TipoTransaccion.TRANSFERENCIA_ENVIADA);
+        Transaccion transaccionRecibida = crearTransaccionHistorial(transferente, transferido, monto, TipoTransaccion.TRANSFERENCIA_RECIBIDA);
+        transferente.agregarTransaccionHistorial(transaccionEnviada);
+        transferido.agregarTransaccionHistorial(transaccionRecibida);
+    }
+
+    public Transaccion crearTransaccionHistorial(Cuenta origen, Cuenta destino, double monto, TipoTransaccion tipoTransaccion) {
+        return new Transaccion(origen, destino, monto, tipoTransaccion);
     }
 
     public void mostrarCuentas() {

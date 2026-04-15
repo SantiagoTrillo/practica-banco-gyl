@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class Cuenta {
     private String nombre, email;
     private int pin;
@@ -5,6 +7,7 @@ public class Cuenta {
     private final boolean admin;
     private Sucursal sucursal;
     private TipoCuenta tipoCuenta;
+    private final ArrayList<Transaccion> historialTransacciones;
 
     public Cuenta(String nombre, String email, int pin, boolean permisosAdmin, Sucursal sucursal, TipoCuenta tipoCuenta) {
         setNombre(nombre);
@@ -14,6 +17,21 @@ public class Cuenta {
         setSucursal(sucursal);
         setTipoCuenta(tipoCuenta);
         saldo = 0;
+        historialTransacciones = new ArrayList<>();
+    }
+
+    public void agregarTransaccionHistorial(Transaccion transaccionNueva) {
+        historialTransacciones.add(transaccionNueva);
+    }
+
+    public String armarHistorialTransacciones() {
+        String historial = "";
+
+        for (Transaccion transaccion : historialTransacciones) {
+            historial += transaccion + "\n";
+        }
+
+        return historial;
     }
 
     @Override
@@ -24,7 +42,8 @@ public class Cuenta {
                 "Saldo: $" + saldo + '\n' +
                 "Admin: " + admin + '\n' +
                 "Sucursal: " + sucursal.getNombre() + '\n' +
-                "Tipo de cuenta: " + tipoCuenta + '\n';
+                "Tipo de cuenta: " + tipoCuenta + '\n' +
+                "-----Historial de transacciones-----\n" + armarHistorialTransacciones() + '\n';
     }
 
     public String getNombre() {
