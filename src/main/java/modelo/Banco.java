@@ -12,33 +12,42 @@ public final class Banco {
         sucursales = new ArrayList<>();
     }
 
-    public void crearSucursal(String nombre) {
-        if (nombre.isBlank()) {
+    public void crearSucursal(String nombreNuevo) {
+        if (nombreNuevo == null || nombreNuevo.isBlank()) {
             throw new IllegalArgumentException("(Banco, crearSucursal) el nombre de la sucursal está vacío");
         }
-        sucursales.add(new Sucursal(nombre));
+        if (buscarSucursal(nombreNuevo) != null) {
+            throw new IllegalStateException("(Banco, crearSucursal) ya existe una sucursal con el nombre ingresado");
+        }
+        sucursales.add(new Sucursal(nombreNuevo));
     }
 
-    public Sucursal buscarSucursal(String nombre) {
+    public Sucursal buscarSucursal(String nombreBuscado) {
         Sucursal sucursalBuscada = null;
 
-        for (Sucursal sucursal : sucursales) {
-            if (sucursal.getNombre().equalsIgnoreCase(nombre)) {
-                sucursalBuscada = sucursal;
+        if (nombreBuscado != null && !nombreBuscado.isBlank()) {
+            for (Sucursal sucursalIterada : sucursales) {
+                if (sucursalIterada.getNombre().equalsIgnoreCase(nombreBuscado)) {
+                    sucursalBuscada = sucursalIterada;
+                }
             }
         }
+
         return sucursalBuscada;
     }
 
-    public Cuenta buscarCuenta(String email) {
+    public Cuenta buscarCuentaBanco(String emailBuscado) {
         Cuenta cuentaBuscada = null;
 
-        for (Sucursal sucursal : sucursales) {
-            cuentaBuscada = sucursal.buscarCuenta(email);
-            if (cuentaBuscada != null) {
-                break;
+        if (emailBuscado != null && !emailBuscado.isBlank()) {
+            for (Sucursal sucursalIterada : sucursales) {
+                cuentaBuscada = sucursalIterada.buscarCuentaSucursal(emailBuscado);
+                if (cuentaBuscada != null) {
+                    break;
+                }
             }
         }
+
         return cuentaBuscada;
     }
 

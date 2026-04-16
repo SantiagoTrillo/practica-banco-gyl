@@ -14,7 +14,7 @@ public class Sucursal {
     }
 
     public Cuenta crearCuenta(String nombre, String email, int pin, boolean permisosAdmin, TipoCuenta tipoCuenta) {
-        Cuenta cuentaNueva = buscarCuenta(email);
+        Cuenta cuentaNueva = buscarCuentaSucursal(email);
 
         if (cuentaNueva == null) {
             cuentaNueva = new Cuenta(nombre, email, pin, permisosAdmin, this, tipoCuenta);
@@ -33,7 +33,7 @@ public class Sucursal {
         cuentas.remove(cuenta);
     }
 
-    public Cuenta buscarCuenta(String email) {
+    public Cuenta buscarCuentaSucursal(String email) {
         Cuenta cuentaBuscada = null;
 
         for (Cuenta cuenta : cuentas) {

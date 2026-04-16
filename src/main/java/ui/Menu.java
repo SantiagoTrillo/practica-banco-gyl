@@ -22,7 +22,7 @@ public class Menu {
 
         while (correr) {
             System.out.println("\n-----Bienvenido a nuestro banco-----\n");
-            System.out.println("\n¿A qué sucursalActiva le gustaría acceder? Escriba el nombre que corresponda (Puede escribir S para salir del programa)\n");
+            System.out.println("¿A qué sucursal le gustaría acceder? Escriba el nombre que corresponda (Puede escribir S para salir del programa)\n");
             mostrarSucursales();
             String nombreSucursal = teclado.nextLine();
 
@@ -37,11 +37,25 @@ public class Menu {
                 }
 
                 while (sucursalActiva != null) {
-                    setEstado();
-                    switch (estadoActual) {
-                        case INVITADO -> mostrarMenuInvitado();
-                        case CLIENTE -> mostrarMenuCliente();
-                        case ADMIN -> mostrarMenuAdmin();
+                    try {
+                        setEstado();
+                        switch (estadoActual) {
+                            case INVITADO -> mostrarMenuInvitado();
+                            case CLIENTE -> mostrarMenuCliente();
+                            case ADMIN -> mostrarMenuAdmin();
+                        }
+                    } catch (IllegalArgumentException datoInvalido) {
+                        System.out.println("Error de dato inválido: " + datoInvalido.getMessage());
+                        teclado.nextLine();
+                    }  catch (IllegalStateException estadoInvalido) {
+                        System.out.println("Error de estado inválido: " + estadoInvalido.getMessage());
+                        teclado.nextLine();
+                    } catch (RuntimeException tiempoEjecucion) {
+                        System.out.println("Error de tiempo de ejecución: " + tiempoEjecucion.getMessage());
+                        teclado.nextLine();
+                    } catch (Exception error) {
+                        System.out.println("Error: " + error.getMessage());
+                        teclado.nextLine();
                     }
                 }
             }
@@ -60,80 +74,20 @@ public class Menu {
 
         switch (opcion) {
             case 1:
-                if (registrarCuenta()) {
-                    System.out.println("\nCuenta creada con éxito. Bienvenido, " + sesionActiva.getNombre() + "\n");
-                } else {
-                    System.out.println("\nYa existe una cuenta creada con el email ingresado\n");
-                }
+                mostrarResultadoMetodo(
+                        registrarCuenta(),
+                        "\nCuenta creada con éxito. Bienvenido, " + sesionActiva.getNombre() + "\n",
+                        "\nYa existe una cuenta creada con el email ingresado\n");
                 break;
             case 2:
-                if (sesionActiva == null) {
-                    if (iniciarSesion()) {
-                        System.out.println("\nSesión iniciada con éxito. Bienvenido, " + sesionActiva.getNombre() + "\n");
-                    } else {
-                        System.out.println("\nEl email y/o el pin ingresados son incorrectos\n");
-                    }
-                } else {
-                    System.out.println("\nYa hay una sesión activa\n");
-                }
+                mostrarResultadoMetodo(
+                        iniciarSesion(),
+                        "\nSesión iniciada con éxito. Bienvenido, " + sesionActiva.getNombre() + "\n",
+                        "\nEl email y/o el pin ingresados son incorrectos\n");
                 break;
             case 3:
                 salirSucursal();
                 break;
-            default:
-                System.out.println("\nOpción inválida\n");
-        }
-    }
-
-    private void mostrarMenuAdmin() {
-        System.out.println("""
-                Ingrese el número que corresponda con la acción que desee realizar:
-                1) Registrar cuenta
-                2) Registrar sucursal
-                3) Mostrar datos de una cuenta
-                4) Mostrar datos de una sucursal
-                5) Mostrar datos del banco
-                6) Eliminar una cuenta
-                7) Cerrar sesión
-                8) Salir de la sucursal""");
-
-        int opcion = teclado.nextInt();
-        teclado.nextLine();
-
-        switch (opcion) {
-            case 1:
-                if (registrarCuenta()) {
-                    System.out.println("\nCuenta creada con éxito. Bienvenido, " + sesionActiva.getNombre() + "\n");
-                } else {
-                    System.out.println("\nYa existe una cuenta creada con el email ingresado\n");
-                }
-                break;
-            case 2:
-                registrarSucursal();
-                break;
-            case 3:
-                mostrarDatosCuenta();
-                break;
-            case 4:
-                mostrarDatosSucursal();
-                break;
-            case 5:
-                mostrarDatosBanco();
-                break;
-            case 6:
-                if (procesarEliminacionAdmin()) {
-                    System.out.println("\nCuenta eliminada con éxito\n");
-                } else {
-                    System.out.println("\nVolviendo al menú de acciones (si no quiso hacer esto, probablemente ingresó un dato inválido)\n");
-                }
-                break;
-            case 7:
-                if (cerrarSesion()) {
-                    System.out.println("\nSesión cerrada con éxito\n");
-                }
-                break;
-            case 8:
-                salirSucursal();
             default:
                 System.out.println("\nOpción inválida\n");
         }
@@ -163,28 +117,77 @@ public class Menu {
                 System.out.println("\nHa retirado $" + montoRetirado + " de su cuenta\n");
                 break;
             case 3:
-                if (procesarTransferencia()) {
-                    System.out.println("\nTransferencia realizada con éxito\n");
-                } else {
-                    System.out.println("\nNo se ha encontrado una cuenta asociada con el email ingresado\n");
-                }
+                mostrarResultadoMetodo(
+                        procesarTransferencia(),
+                        "\nTransferencia realizada con éxito\n",
+                        "\nNo se ha encontrado una cuenta asociada con el email ingresado\n");
                 break;
             case 4:
-                mostrarDatosCuenta();
+                System.out.println(sesionActiva);
+                System.out.println(sesionActiva.armarHistorialTransacciones());
                 break;
             case 5:
-                if (procesarEliminacion()) {
-                    System.out.println("\nCuenta eliminada con éxito\n");
-                } else {
-                    System.out.println("\nVolviendo al menú de acciones\n");
-                }
+                mostrarResultadoMetodo(procesarEliminacion(),
+                        "\nCuenta eliminada con éxito\n",
+                        "\nVolviendo al menú de acciones\n");
                 break;
             case 6:
-                if (cerrarSesion()) {
-                    System.out.println("\nSesión cerrada con éxito\n");
-                }
+                sesionActiva = null;
+                System.out.println("\nSesión cerrada con éxito\n");
                 break;
             case 7:
+                salirSucursal();
+                break;
+            default:
+                System.out.println("\nOpción inválida\n");
+        }
+    }
+
+    private void mostrarMenuAdmin() {
+        System.out.println("""
+                Ingrese el número que corresponda con la acción que desee realizar:
+                1) Registrar cuenta
+                2) Registrar sucursal
+                3) Mostrar datos de una cuenta
+                4) Mostrar datos de una sucursal
+                5) Mostrar datos del banco
+                6) Eliminar una cuenta
+                7) Cerrar sesión
+                8) Salir de la sucursal""");
+
+        int opcion = teclado.nextInt();
+        teclado.nextLine();
+
+        switch (opcion) {
+            case 1:
+                mostrarResultadoMetodo(
+                        registrarCuenta(),
+                        "\nCuenta creada con éxito. Bienvenido, " + sesionActiva.getNombre() + "\n",
+                        "\nYa existe una cuenta creada con el email ingresado\n");
+                break;
+            case 2:
+                registrarSucursal();
+                break;
+            case 3:
+                mostrarDatosCuenta();
+                break;
+            case 4:
+                mostrarDatosSucursal();
+                break;
+            case 5:
+                mostrarDatosBanco();
+                break;
+            case 6:
+                mostrarResultadoMetodo(
+                        procesarEliminacionAdmin(),
+                        "\nCuenta eliminada con éxito\n",
+                        "\nVolviendo al menú de acciones (si no quiso hacer esto, probablemente ingresó un dato inválido)\n");
+                break;
+            case 7:
+                sesionActiva = null;
+                System.out.println("\nSesión cerrada con éxito\n");
+                break;
+            case 8:
                 salirSucursal();
                 break;
             default:
@@ -216,14 +219,8 @@ public class Menu {
         int opcionCuenta = teclado.nextInt();
 
         switch (opcionCuenta) {
-            case 1:
-                tipoCuentaNuevo = TipoCuenta.CAJA_AHORRO;
-                break;
-            case 2:
-                tipoCuentaNuevo = TipoCuenta.CUENTA_CORRIENTE;
-                break;
-            default:
-                System.out.println("\nOpción inválida\n");
+            case 1 -> tipoCuentaNuevo = TipoCuenta.CAJA_AHORRO;
+            case 2 -> tipoCuentaNuevo = TipoCuenta.CUENTA_CORRIENTE;
         }
 
         sesionActiva = sucursalActiva.crearCuenta(nombreNuevo, emailNuevo, pinNuevo, false, tipoCuentaNuevo);
@@ -233,41 +230,10 @@ public class Menu {
         return resultado;
     }
 
-    private boolean iniciarSesion() {
-        boolean resultado = false;
-
-        System.out.println("\nIngrese su email\n");
-
-        String emailSesion = teclado.nextLine();
-
-        System.out.println("\nIngrese su pin\n");
-
-        int pinSesion = teclado.nextInt();
-        Cuenta cuentaSesion = sucursalActiva.buscarCuenta(emailSesion);
-
-        if (cuentaSesion != null) {
-            if (cuentaSesion.getPin() == pinSesion) {
-                this.sesionActiva = cuentaSesion;
-                resultado = true;
-            }
-        }
-        return resultado;
-    }
-
-    private boolean cerrarSesion() {
-        boolean resultado = false;
-
-        if (verificarSesionActiva()) {
-            sesionActiva = null;
-            resultado = true;
-        }
-
-        return resultado;
-    }
-
-    private void salirSucursal() {
-        sesionActiva = null;
-        sucursalActiva = null;
+    private void registrarSucursal() {
+        System.out.println("\nIngrese el nombre de la nueva sucursal\n");
+        String nombreNuevaSucursal = teclado.nextLine();
+        banco.crearSucursal(nombreNuevaSucursal);
     }
 
     private double procesarDeposito() {
@@ -299,7 +265,7 @@ public class Menu {
         System.out.println("\nIngrese el email de la persona a la que transferirá el dinero\n");
         String emailTransferido = teclado.nextLine();
 
-        Cuenta cuentaTransferido = banco.buscarCuenta(emailTransferido);
+        Cuenta cuentaTransferido = banco.buscarCuentaBanco(emailTransferido);
 
         if (cuentaTransferido != null && !cuentaTransferido.getEmail().equals(sesionActiva.getEmail())) {
             OperacionesBancarias.transferir(sesionActiva, cuentaTransferido, montoTransferido);
@@ -308,22 +274,42 @@ public class Menu {
         return resultado;
     }
 
-    private void registrarSucursal() {
-        System.out.println("\nIngrese el nombre de la nueva sucursalActiva\n");
-        String nombreNuevaSucursal = teclado.nextLine();
-        banco.crearSucursal(nombreNuevaSucursal);
+    private boolean iniciarSesion() {
+        boolean resultado = false;
+
+        System.out.println("\nIngrese su email\n");
+
+        String emailSesion = teclado.nextLine();
+
+        System.out.println("\nIngrese su pin\n");
+
+        int pinSesion = teclado.nextInt();
+        Cuenta cuentaSesion = sucursalActiva.buscarCuentaSucursal(emailSesion);
+
+        if (cuentaSesion != null) {
+            if (cuentaSesion.getPin() == pinSesion) {
+                this.sesionActiva = cuentaSesion;
+                resultado = true;
+            }
+        }
+        return resultado;
+    }
+
+    private void salirSucursal() {
+        sesionActiva = null;
+        sucursalActiva = null;
     }
 
     private void mostrarDatosCuenta() {
         System.out.println("\nIngrese el email de la cuenta cuyos datos desea ver\n");
         String emailCuentaBuscada = teclado.nextLine();
 
-        Cuenta cuentaBuscada = banco.buscarCuenta(emailCuentaBuscada);
+        Cuenta cuentaBuscada = banco.buscarCuentaBanco(emailCuentaBuscada);
         System.out.println(cuentaBuscada);
     }
 
     private void mostrarDatosSucursal() {
-        System.out.println("\nIngrese el nombre de la sucursalActiva cuyos datos desea ver\n");
+        System.out.println("\nIngrese el nombre de la sucursal cuyos datos desea ver\n");
         mostrarSucursales();
         String nombreSucursalBuscada = teclado.nextLine();
 
@@ -352,6 +338,14 @@ public class Menu {
         }
     }
 
+    private void mostrarResultadoMetodo(boolean resultado, String mensajeExito, String mensajeError) {
+        if (resultado) {
+            System.out.println(mensajeExito);
+        } else {
+            System.out.println(mensajeError);
+        }
+    }
+
     private boolean procesarEliminacion() {
         boolean resultado = false;
 
@@ -371,7 +365,7 @@ public class Menu {
 
         System.out.println("\nIngrese el mail de la cuenta que desea eliminar\n");
         String emailCuentaEliminar = teclado.nextLine();
-        Cuenta cuentaEliminar = banco.buscarCuenta(emailCuentaEliminar);
+        Cuenta cuentaEliminar = banco.buscarCuentaBanco(emailCuentaEliminar);
 
         if (cuentaEliminar != null) {
             if (cuentaEliminar != sesionActiva) {
@@ -389,18 +383,10 @@ public class Menu {
         return resultado;
     }
 
-    private boolean verificarSesionActiva() {
-        return sesionActiva != null;
-    }
-
-    private boolean verificarAdmin() {
-        return verificarSesionActiva() && sesionActiva.isAdmin();
-    }
-
     private void setEstado() {
-        if (!verificarSesionActiva()) {
+        if (sesionActiva == null) {
             estadoActual = Estado.INVITADO;
-        } else if (verificarAdmin()) {
+        } else if (sesionActiva.isAdmin()) {
             estadoActual = Estado.ADMIN;
         } else {
             estadoActual = Estado.CLIENTE;

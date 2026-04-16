@@ -24,6 +24,21 @@ public class Cuenta {
         historialTransacciones = new ArrayList<>();
     }
 
+    public void agregarTransaccionHistorial(Transaccion transaccionNueva) {
+        historialTransacciones.add(transaccionNueva);
+    }
+
+    public String armarHistorialTransacciones() {
+        StringBuilder historial = new StringBuilder();
+        historial.append("\n-----Historial de transacciones-----\n");
+
+        for (Transaccion transaccion : this.getHistorialTransacciones()) {
+            historial.append(transaccion).append("\n");
+        }
+
+        return historial.toString();
+    }
+
     public void agregarSaldo(double monto) {
         if (monto < 1) {
             throw new IllegalArgumentException("(Cuenta, agregarSaldo) monto inválido");
@@ -39,20 +54,6 @@ public class Cuenta {
             throw new IllegalArgumentException("(Cuenta, restarSaldo) saldo insuficiente");
         }
         saldo -= monto;
-    }
-
-    public String armarHistorialTransacciones() {
-        StringBuilder historial = new StringBuilder();
-
-        for (Transaccion transaccion : this.getHistorialTransacciones()) {
-            historial.append(transaccion).append("\n");
-        }
-
-        return historial.toString();
-    }
-
-    public void agregarTransaccionHistorial(Transaccion transaccionNueva) {
-        historialTransacciones.add(transaccionNueva);
     }
 
     @Override
@@ -92,35 +93,37 @@ public class Cuenta {
 
     private void setNombre(String nombre) {
         if (nombre == null || nombre.isBlank()) {
-            throw new IllegalArgumentException("(modelo.Cuenta, setNombre) el nombre de la cuenta está vacío");
+            throw new IllegalArgumentException("(Cuenta, setNombre) el nombre de la cuenta está vacío");
+        } else if (nombre.length() < 2) {
+            throw new IllegalArgumentException("(Cuenta, setNombre) el nombre de la cuenta es demasiado corto");
         }
         this.nombre = nombre;
     }
 
     private void setEmail(String email) {
         if (email == null || email.isBlank()) {
-            throw new IllegalArgumentException("(modelo.Cuenta, setEmail) el email de la cuenta está vacío");
+            throw new IllegalArgumentException("(Cuenta, setEmail) el email de la cuenta está vacío");
         }
         this.email = email;
     }
 
     private void setPin(int pin) {
         if (pin > 9999 || pin < 1000) {
-            throw new IllegalArgumentException("(modelo.Cuenta, setPin) el pin es inválido");
+            throw new IllegalArgumentException("(Cuenta, setPin) el pin es inválido");
         }
         this.pin = pin;
     }
 
     private void setSucursal(Sucursal sucursal) {
         if (sucursal == null) {
-            throw new IllegalArgumentException("(modelo.Cuenta, setSucursal) la sucursal de la cuenta es nula");
+            throw new IllegalArgumentException("(Cuenta, setSucursal) la sucursal de la cuenta es nula");
         }
         this.sucursal = sucursal;
     }
 
     private void setTipoCuenta(TipoCuenta tipoCuenta) {
         if (tipoCuenta == null) {
-            throw new IllegalArgumentException("(modelo.Cuenta, setTipoCuenta) el tipo de la cuenta está vacío");
+            throw new IllegalArgumentException("(Cuenta, setTipoCuenta) el tipo de la cuenta es nulo");
         }
         this.tipoCuenta = tipoCuenta;
     }
