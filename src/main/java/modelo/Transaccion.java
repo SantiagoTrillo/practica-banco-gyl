@@ -1,3 +1,5 @@
+package modelo;
+
 public class Transaccion {
     private final Cuenta origen, destino;
     private final double monto;

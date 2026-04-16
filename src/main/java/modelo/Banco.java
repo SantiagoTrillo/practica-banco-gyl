@@ -1,4 +1,8 @@
+package modelo;
+
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Collections;
 
 public final class Banco {
     private static Banco instancia;
@@ -6,36 +10,6 @@ public final class Banco {
 
     private Banco() {
         sucursales = new ArrayList<>();
-        inicializarSucursales();
-        inicializarCuentas();
-    }
-
-    private void inicializarSucursales(){
-        sucursales.add(new Sucursal("Parque Patricios"));
-        sucursales.add(new Sucursal("Boedo"));
-    }
-
-    private void inicializarCuentas() {
-        for (Sucursal sucursal : sucursales) {
-            for (int i = 1; i <= 10; i++) {
-                sucursal.crearCuenta("Cliente " + i, "cliente" + i + "@gmail.com", 999 + i, false, TipoCuenta.CUENTA_CORRIENTE);
-            }
-            sucursal.crearCuenta("Admin", "admin@gmail.com", 2007, true, TipoCuenta.CAJA_AHORRO);
-        }
-    }
-
-    public void mostrarSucursales() {
-        for (int i = 0; i < sucursales.size(); i++) {
-            System.out.println(i + 1 + ") " + sucursales.get(i).getNombre());
-        }
-    }
-
-    public void mostrarCuentas() {
-        System.out.println("-----Detalles de las cuentas del banco-----");
-        for (Sucursal sucursal : sucursales) {
-            System.out.println("-----Detalles de las cuentas de la sucursal " + sucursal.getNombre() + "-----");
-            sucursal.mostrarCuentas();
-        }
     }
 
     public void crearSucursal(String nombre) {
@@ -73,5 +47,9 @@ public final class Banco {
             instancia = new Banco();
         }
         return instancia;
+    }
+
+    public List<Sucursal> getSucursales() {
+        return Collections.unmodifiableList(sucursales);
     }
 }
